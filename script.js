@@ -1,10 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Smooth scrolling for navigation links
+    // Animate skill bars on scroll
+const skillsSection = document.querySelector('.skills');
+const skillLevels = document.querySelectorAll('.skill-level');
+
+const animateSkills = () => {
+    const triggerBottom = window.innerHeight * 0.85;
+    const sectionTop = skillsSection.getBoundingClientRect().top;
+
+    if (sectionTop < triggerBottom) {
+        skillLevels.forEach(skill => {
+            skill.style.width = skill.getAttribute('data-level');
+        });
+    }
+};
+
+window.addEventListener('scroll', animateSkills);
+animateSkills(); // Run on load if already visible
+    // Smooth scrolling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             document.querySelector(this.getAttribute('href')).scrollIntoView({
                 behavior: 'smooth'
+                
             });
         });
     });
@@ -18,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.classList.toggle('is-active');
     });
 
-    // Close menu when a link is clicked
+    // Close menu on link click
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
@@ -26,28 +44,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Reveal animations on scroll
-    const revealElements = document.querySelectorAll('.service-card, .work-card, .about-text, .contact-card');
+    // Logo shrink on scroll
+const logoContainer = document.querySelector('.logo-container');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        logoContainer.style.transform = 'scale(0.85)';
+        logoContainer.style.transition = 'transform 0.3s ease';
+    } else {
+        logoContainer.style.transform = 'scale(1)';
+    }
+});
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal');
     
     const revealOnScroll = () => {
         const triggerBottom = window.innerHeight * 0.85;
-        
         revealElements.forEach(el => {
             const elTop = el.getBoundingClientRect().top;
             if (elTop < triggerBottom) {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
+                el.classList.add('active');
             }
         });
     };
 
-    // Initial styles for reveal logic
-    revealElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.6s ease-out';
-    });
-
     window.addEventListener('scroll', revealOnScroll);
-    revealOnScroll(); // Run once on load
+    revealOnScroll();
+
+    // Dark/Light Mode Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        themeToggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    });
 });
